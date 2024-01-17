@@ -1,0 +1,269 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+@use "_mixins.scss";
+@use "sass:math";
+
+:root {
+  --text-color: #1a162e;
+  --icon-color: brightness(0) saturate(100%) invert(8%) sepia(10%)
+    saturate(4384%) hue-rotate(212deg) brightness(96%) contrast(95%);
+  --header-bg-color: #eee;
+  --body-bg-color: #fff;
+  --top-action-group-bg-color: #fff;
+  --top-action-group-shadow-color: rgba(237, 237, 246, 0.2);
+  --top-action-group-seperate: #ededf6;
+
+  @include breakpoint(lg) {
+    --header-bg-color: #fff;
+    --body-bg-color: #eee;
+  }
+}
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Gordita", sans-serif;
+  color: var(--text-color);
+  background: var(--body-bg-color);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  border: none;
+  background: transparent;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+
+.icon {
+  filter: var(--icon-color);
+}
+
+// Breakpoints, dimension, container, row, column, v.v
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1370px,
+);
+$grid-columns: 12;
+$grid-gutter-width: 30px;
+
+%gutter-padding {
+  padding-left: $grid-gutter-width * 0.5;
+  padding-right: $grid-gutter-width * 0.5;
+}
+
+.container-fluid {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  @extend %gutter-padding;
+}
+
+.container {
+  @extend .container-fluid;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -$grid-gutter-width * 0.5;
+  margin-right: -$grid-gutter-width * 0.5;
+
+  [class*="col-"] {
+    flex: 0 0 auto;
+    @extend %gutter-padding;
+  }
+}
+
+.col {
+  flex: 1 0;
+  @extend %gutter-padding;
+}
+
+@mixin make-media-query($dimension, $bypass: false) {
+  @if $bypass {
+    @content;
+  } @else {
+    @media (min-width: $dimension) {
+      @content;
+    }
+  }
+}
+
+@each $breakpoint, $dimension in $grid-breakpoints {
+  $max-width: map-get($container-max-widths, $breakpoint);
+  $infix: if($breakpoint ==xs, "", "-#{$breakpoint}");
+
+  @include make-media-query($dimension, $breakpoint ==xs) {
+    .container {
+      max-width: $max-width;
+    }
+
+    @for $i from 1 through $grid-columns {
+      .col#{$infix}-#{$i} {
+        width: math.div(100%, $grid-columns) * $i;
+      }
+    }
+  }
+}
